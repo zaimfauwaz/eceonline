@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id('car_id');
-            $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
+            $table->foreignId('branch_id')->references('branch_id')->on('branches')->onDelete('cascade');
             $table->string('car_brand');
             $table->string('car_model');
             $table->string('car_color');
@@ -24,6 +25,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        
+        DB::statement('ALTER TABLE cars AUTO_INCREMENT = 1');
     }
 
     /**
