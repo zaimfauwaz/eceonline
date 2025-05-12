@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cars', function (Blueprint $table) {
-            $table->string('car_image_url')->nullable()->after('car_description');
+        Schema::create('branches', function (Blueprint $table) {
+            $table->id('bookcar_id');
+            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
+            $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cars', function (Blueprint $table) {
-            $table->dropColumn('car_image_url');
-        });
+        Schema::dropIfExists('branches');
     }
 };

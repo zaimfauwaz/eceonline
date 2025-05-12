@@ -12,11 +12,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::with('branch')
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
-            
-        return view('homepage', compact('cars'));
+        //
     }
 
     /**

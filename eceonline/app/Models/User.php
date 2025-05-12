@@ -12,8 +12,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
     /**
      * The attributes that are mass assignable.
      *
@@ -23,8 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
-        'branch_id',
     ];
 
     /**
@@ -33,13 +29,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'role',
-        'branch_id',
         'password',
         'remember_token',
     ];
-
-    
 
     /**
      * Get the attributes that should be cast.
@@ -49,22 +41,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'user_id' => 'integer',
-            'branch_id' => 'integer',
-            'role' => 'integer',            
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
         ];
-    }
-
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class, 'branch_id', 'branch_id');
-    }
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class, 'user_id', 'user_id');
     }
 }
