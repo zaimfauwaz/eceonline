@@ -14,7 +14,18 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <b>Role: 
+                    @if(Auth::user()->role == 9)
+                        {{ __('Administrator') }}
+                    @elseif(Auth::user()->role == 3)
+                        {{ __('Staff') }}
+                    @elseif(Auth::user()->role == 7)
+                        {{ __('Customer') }}
+                    @endif </b></br>
+
+                    Welcome, <b>{{ Auth::user()->name }}</b><br>
+
+                    {{ __('You are logged in !') }}
                 </div>
             </div>
         </div>

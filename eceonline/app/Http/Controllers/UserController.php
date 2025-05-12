@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class BranchController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
 
-    public function __construct() {
+    public function __construct(){
         $this->middleware(function ($request, $next) {
-            if (Gate::denies('manage-branches')) {
-                abort(403, 'You do not have permission to access branches management.');
+            if (Gate::denies('manage-users')) {
+                abort(403, 'You do not have permission to access users management.');
             }
-            
-            return $next($request);
-        }) -> except(['index', 'show']);
+        return $next($request);
+        });
     }
 
     public function index()
     {
-        $branches = Branch::with('cars')
+        $users = User::with('bookings')
             ->orderBy('created_at', 'desc')
             ->paginate(12);
-        return view('branches.index', compact('branches'));
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -48,7 +47,7 @@ class BranchController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Branch $branch)
+    public function show(string $id)
     {
         //
     }
@@ -56,7 +55,7 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Branch $branch)
+    public function edit(string $id)
     {
         //
     }
@@ -64,7 +63,7 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Branch $branch)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -72,7 +71,7 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Branch $branch)
+    public function destroy(string $id)
     {
         //
     }

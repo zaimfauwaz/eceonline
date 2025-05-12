@@ -10,9 +10,24 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Gate::denies('manage-bookings')) {
+                abort(403, 'You do not have permission to access bookings management.');
+            }
+            
+            return $next($request);
+        });
+    }
+
     public function index()
     {
-        //
+        $bookings = Booking::with('car', 'branch')
+            ->orderBy('created_at', 'desc')
+            ->paginate(12);
+        return view('bookings.index', compact('bookings'));
     }
 
     /**

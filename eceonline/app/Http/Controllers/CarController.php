@@ -10,13 +10,24 @@ class CarController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct() {
+        $this->middleware(function ($request, $next) {
+            if (Gate::denies('manage-cars')) {
+                abort(403, 'You do not have permission to access cars management.');
+            }
+            
+            return $next($request);
+        }) -> except(['index', 'show']);
+    }
+
     public function index()
     {
         $cars = Car::with('branch')
             ->orderBy('created_at', 'desc')
             ->paginate(12);
             
-        return view('homepage', compact('cars'));
+        return view('cars.index', compact('cars'));
     }
 
     /**
