@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -23,8 +24,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::with('bookings')
-            ->orderBy('created_at', 'desc')
+        $users = User::orderBy('created_at', 'desc')
             ->paginate(12);
         return view('user.index', compact('users'));
     }
@@ -34,7 +34,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        $branches = Branch::all();
+        return view('user.create', compact('branches'));
     }
 
     /**
@@ -43,19 +44,19 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'branch_id' => 'exists:branches,id',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|integer|in:3,7,9',
+            'branch_id' => 'required|exists:branches,branch_id',
+            'user_name' => 'required|string|max:255',
+            'user_password' => 'required|string|min:8|confirmed',
+            'user_email' => 'required|string|email|max:255|unique:users,email',
+            'user_role' => 'required|integer|in:3,7,9',
         ]);
 
         User::create([
             'branch_id' => $request->branch_id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
+            'name' => $request->user_name,
+            'email' => $request->user_email,
+            'role' => $request->user_role,
+            'password' => bcrypt($request->user_password),
         ]);
 
         return redirect()->route('user.index')->with('success', 'User created successfully.');
@@ -76,7 +77,8 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        return view('user.edit', compact('user'));
+        $branches = Branch::all();
+        return view('user.edit', compact(['user', 'branches']));
     }
 
     /**
@@ -87,21 +89,48 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'branch_id' => 'exists:branches,id',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->user_id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|integer|in:3,7,9',
+            'branch_id' => 'exists:branches,branch_id',
+            'user_name' => 'required|string|max:255',
+            'user_email' => 'required|string|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
+            'user_role' => 'required|integer|in:3,7,9',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+        $user->name = $request->user_name;
+        $user->email = $request->user_email;
+        $user->role = $request->user_role;
+        if ($request->branch_id) {
+            $user->branch_id = $request->branch_id;
+        } else {
+            $user->branch_id = null;
         }
         $user->save();
 
         return redirect()->route('user.index')->with('success', 'User updated successfully.');
+    }
+
+    /**
+     * Show the form for changing the password.
+     */
+    public function password(string $id)
+    {
+        $user = User::findOrFail($id);
+        return view('user.password', compact('user'));
+    }
+    /**
+     * Update the password of the specified resource in storage.
+     */
+    public function updatePassword(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect()->route('user.index')->with('success', 'Password updated successfully.');
     }
 
     /**

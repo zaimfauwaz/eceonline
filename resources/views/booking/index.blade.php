@@ -33,22 +33,27 @@
             <td>{{ $booking->status }}</td>
             <td>{{ optional($booking->approvedBy)->name ?? 'Not Available' }}</td>
             <td>
-                <a href="{{ route('booking.show', $booking->booking_id) }}" class="btn btn-primary">
-                    View Details
+                <a href="{{ route('booking.show', $booking->booking_id) }}" class="btn btn-primary mb-2">
+                    <i class="fas fa-eye"></i>
                 </a>
                 @can('manage-bookings')
-                    <a href="{{ route('booking.edit', $booking->booking_id) }}" class="btn btn-warning">
-                    Edit
-                </a>
-                <form action="{{ route('booking.destroy', $booking->booking_id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this booking?')">
-                        Delete
-                    </button>
-                </form>
+                    <a href="{{ route('booking.edit', $booking->booking_id) }}" class="btn btn-warning mb-2">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{{ route('booking.destroy', $booking->booking_id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger mb-2" onclick="return confirm('Are you sure you want to delete this booking?')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
                 @endcan
             </td>
         </tr>
     @endforeach
+@endsection
+@section('pagination')
+    <div class="d-flex justify-content-center">
+        {{ $bookings->links() }}
+    </div>
 @endsection

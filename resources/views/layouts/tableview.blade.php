@@ -28,6 +28,9 @@
                         <!-- Add more rows as needed -->
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    @yield('pagination')
+                </div>
             </div>
         </div>
     </div>
