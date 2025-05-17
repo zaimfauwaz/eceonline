@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BranchController extends Controller
 {
@@ -26,7 +27,8 @@ class BranchController extends Controller
         $branches = Branch::with('cars')
             ->orderBy('created_at', 'desc')
             ->paginate(12);
-        return view('branches.index', compact('branches'));
+        $mainBranch = Branch::where('branch_id', 1)->first();
+        return view('branch.index', compact(['branches', 'mainBranch']));
     }
 
     /**
@@ -34,7 +36,8 @@ class BranchController extends Controller
      */
     public function create()
     {
-        //
+        $mainBranch = Branch::where('branch_id', 1)->first();
+        return view('branch.create', compact('mainBranch'));
     }
 
     /**
@@ -42,7 +45,14 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'branch_name' => 'required|string|max:255',
+            'branch_location' => 'required|string|max:255',
+        ]);
+
+        Branch::create($request->all());
+
+        return redirect()->route('branch.index')->with('success', 'Branch created successfully.');
     }
 
     /**
@@ -50,7 +60,8 @@ class BranchController extends Controller
      */
     public function show(Branch $branch)
     {
-        //
+        $mainBranch = Branch::where('branch_id', 1)->first();
+        return view('branch.show', compact(['branch', 'mainBranch']));
     }
 
     /**
@@ -58,7 +69,8 @@ class BranchController extends Controller
      */
     public function edit(Branch $branch)
     {
-        //
+        $mainBranch = Branch::where('branch_id', 1)->first();
+        return view('branch.edit', compact(['branch', 'mainBranch']));
     }
 
     /**
@@ -66,7 +78,14 @@ class BranchController extends Controller
      */
     public function update(Request $request, Branch $branch)
     {
-        //
+        $request->validate([
+            'branch_name' => 'required|string|max:255',
+            'branch_location' => 'required|string|max:255',
+        ]);
+
+        $branch->update($request->all());
+
+        return redirect()->route('branch.index')->with('success', 'Branch updated successfully.');
     }
 
     /**
@@ -74,6 +93,7 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        //
+        $branch->delete();
+        return redirect()->route('branch.index')->with('success', 'Branch deleted successfully.');
     }
 }

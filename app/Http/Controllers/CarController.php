@@ -6,6 +6,7 @@ use App\Models\Car;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class CarController extends Controller
 {
@@ -65,7 +66,7 @@ class CarController extends Controller
             Car::create($validated);
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Exception $e) {
-            \Log::error('Car creation failed: ' . $e->getMessage());
+            Log::error('Car creation failed: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Failed to create car. Please try again.');
         }
     }
