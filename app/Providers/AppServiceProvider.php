@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,5 +47,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 7;
         });
 
+        // Share mainBranch globally
+        View::composer('*', function ($view) {
+            $mainBranch = \App\Models\Branch::where('branch_id', 1)->first();
+            $view->with('mainBranch', $mainBranch);
+        });
     }
 }

@@ -2,10 +2,18 @@
     <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
         <h2 class="m-0 text-primary"><i class="fa fa-car me-3"></i><b>{{ config('app.name', 'Laravel') }}</b></h2>
     </a>
-    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+
+    <div>
+        @auth
+            @if (Auth::user()->branch_id)
+                <span class="nav-link">{{ Auth::user()->branch->branch_name ?? 'No Branch Assigned' }}</span>
+            @endif
+        @endauth
+    </div>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="margin-right: 1rem;">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarCollapse">
         @guest
         <div class="navbar-nav ms-auto p-4 p-lg-0">
@@ -80,6 +88,25 @@
                     const menu = this.querySelector('.dropdown-menu');
                     menu.classList.toggle('show');
                 });
+            });
+
+            // Fix for navbar collapse toggle
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.querySelector('#navbarCollapse');
+
+            navbarToggler.addEventListener('click', function () {
+                if (navbarCollapse.classList.contains('show')) {
+                    navbarCollapse.classList.remove('show');
+                } else {
+                    navbarCollapse.classList.add('show');
+                }
+            });
+
+            // Close the navbar when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!navbarCollapse.contains(e.target) && !navbarToggler.contains(e.target)) {
+                    navbarCollapse.classList.remove('show');
+                }
             });
         });
     </script>

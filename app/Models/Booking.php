@@ -16,6 +16,14 @@ class Booking extends Model
         'booking_status',
     ];
 
+    protected $casts = [
+        'booking_start' => 'datetime',
+        'booking_end' => 'datetime',
+        'approved_by' => 'integer',
+        'user_id' => 'integer',
+        'booking_status' => 'integer',
+    ];
+    
     public function cars()
     {
         return $this->belongsToMany(Car::class, 'booking_cars', 'booking_id', 'car_id');
@@ -29,5 +37,16 @@ class Booking extends Model
     public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by', 'user_id');
+    }
+
+    public function getStatusAttribute()
+    {
+        $statuses = [
+            0 => 'Pending',
+            1 => 'Approved',
+            2 => 'Rejected',
+        ];
+
+        return $statuses[$this->booking_status] ?? 'Unknown';
     }
 }

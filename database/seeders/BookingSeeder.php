@@ -1,9 +1,11 @@
 <?php
+// This seeder is no longer in use.
 
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 
 
 class BookingSeeder extends Seeder
@@ -21,18 +23,18 @@ class BookingSeeder extends Seeder
                 'booking_id' => 1,
                 'user_id' => 3,
                 'approved_by' => 1,
-                'booking_start' => now(),
-                'booking_end' => now()->addDays(3),
+                'booking_start' => now()->addDays(3),
+                'booking_end' => now()->addDays(4),
                 'booking_status' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'booking_id' => 2,
-                'user_id' => 2,
+                'user_id' => 3,
                 'approved_by' => null,
                 'booking_start' => now()->addDays(100),
-                'booking_end' => now()->addDays(4),
+                'booking_end' => now()->addDays(101),
                 'booking_status' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),

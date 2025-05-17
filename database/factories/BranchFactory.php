@@ -28,4 +28,11 @@ class BranchFactory extends Factory
             'branch_location' => $this->faker->address,
         ];
     }
+
+    /**
+     * Generate a specified number of branches.
+     *
+     * @param int $count
+     * @return void
+     */
 }

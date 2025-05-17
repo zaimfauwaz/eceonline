@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->references('user_id')->on('users')->onDelete('cascade');
             $table->datetime('booking_start');
             $table->datetime('booking_end');
-            $table->integer('booking_status')->default(0);
+            $table->integer('booking_status'); // Remove default value and keep it required
             $table->timestamps();
             $table->softDeletes();
         });
