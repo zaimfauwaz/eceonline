@@ -81,15 +81,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const dropdowns = document.querySelectorAll('.nav-item.dropdown');
-            dropdowns.forEach(dropdown => {
-                dropdown.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    const menu = this.querySelector('.dropdown-menu');
-                    menu.classList.toggle('show');
-                });
-            });
-
             // Fix for navbar collapse toggle
             const navbarToggler = document.querySelector('.navbar-toggler');
             const navbarCollapse = document.querySelector('#navbarCollapse');
